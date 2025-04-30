@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solomap — Реєстрація через Phantom</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .modal {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 0 20px #00d1ff66;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1rem;
+            opacity: 0.85;
+            margin-bottom: 30px;
+        }
+
+        .loader {
+            border: 4px solid #333;
+            border-top: 4px solid #00D1FF;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            margin: auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #00D1FF;
+            color: #00D1FF;
+            padding: 10px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: #00D1FF;
+            color: #121212;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #00D1FF88;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal">
+        <h2>Реєстрація через Phantom</h2>
+        <p>Будь ласка, підтвердіть володіння гаманцем</p>
+        <button class="btn-secondary" id="phantomConnectBtn">🔮 Підключити Phantom</button>
+        <div class="loader" id="loader" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById("phantomConnectBtn").addEventListener("click", registerPhantom);
+
+        async function registerPhantom() {
+            const btn = document.getElementById("phantomConnectBtn");
+            const loader = document.getElementById("loader");
+            btn.style.display = "none";
+            loader.style.display = "block";
+
+            const message = "Підтверджую, що я власник гаманця для гри в Solomap.";
+            const encodedMessage = new TextEncoder().encode(message);
+
+            try {
+                if (!window.solana || !window.solana.isPhantom) {
+                    throw new Error("Phantom не встановлено");
+                }
+
+                const wallet = await window.solana.connect({ onlyIfTrusted: false });
+                const signature = await window.solana.signMessage(encodedMessage, "utf8");
+
+                const walletAddress = wallet.publicKey.toString();
+                const nickname = "User_" + walletAddress.slice(0, 4);
+                const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/1077/1077063.png";
+
+                const profile = {
+                    wallet: walletAddress,
+                    nickname,
+                    name: "",
+                    surname: "",
+                    avatar: defaultAvatar,
+                    verified: true,
+                    signature: btoa(String.fromCharCode(...signature.signature))
+                };
+
+                localStorage.setItem("wallet", walletAddress);
+                localStorage.setItem("profile", JSON.stringify(profile));
+
+                window.location.href = "profile.html";
+            } catch (e) {
+                loader.style.display = "none";
+                btn.style.display = "block";
+                alert("❌ Не вдалося завершити реєстрацію: " + e.message);
+            }
+        }
+    </script>
+
+    <script src="../JS/index.js"></script>
+</body>
+
+</html>

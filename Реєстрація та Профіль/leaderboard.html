@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solomap — Рейтинг</title>
+    <link rel="stylesheet" href="CSS/index.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            border-collapse: collapse;
+            background: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: #111;
+            color: #00D1FF;
+        }
+
+        tr:hover {
+            background-color: #222;
+        }
+
+        @media (max-width: 600px) {
+
+            th,
+            td {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Топ гравців</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Гаманець</th>
+                <th>Загалом токенів</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboardBody">
+            <tr>
+                <td colspan="3">Завантаження...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        fetch('http://localhost:4000/api/leaderboard')
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('leaderboardBody');
+                tbody.innerHTML = '';
+                data.forEach((entry, i) => {
+                    const row = `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${entry.wallet}</td>
+              <td>${entry.total} SOL</td>
+            </tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
+    </script>
+</body>
+
+</html>

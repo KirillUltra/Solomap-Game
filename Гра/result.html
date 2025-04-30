@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solomap — Результат</title>
+    <link rel="stylesheet" href="../CSS/index.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #111;
+            box-shadow: 0 0 10px #000;
+        }
+
+        .navbar .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00D1FF, #9B5DE5);
+            /* Градиент */
+            -webkit-background-clip: text;
+            /* Для Webkit браузеров (Chrome, Safari) */
+            background-clip: text;
+            /* Стандартное свойство, но поддерживается не всеми браузерами */
+            -webkit-text-fill-color: transparent;
+            /* Делаем текст прозрачным, чтобы видеть фон */
+            color: transparent;
+            /* Для других браузеров, где не работает webkit */
+            cursor: pointer;
+        }
+
+
+        .navbar .profile-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: url('https://img.icons8.com/fluency-systems-regular/48/FFFFFF/user-male-circle--v1.png') no-repeat center/cover;
+            cursor: pointer;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        #map {
+            height: 300px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px #00d1ff55;
+        }
+
+        .info {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 20px;
+            width: 100%;
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00D1FF, #9B5DE5);
+            width: 0;
+            transition: width 1s ease-out;
+        }
+
+        .btn-primary {
+            padding: 12px 24px;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #00D1FF, #9B5DE5);
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            #map {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo" onclick="window.location.href='../index.html'">Solomap</div>
+        <div class="profile-icon" onclick="window.location.href='../Реєстрація та Профіль/profile.html'"></div>
+    </div>
+
+    <div class="container">
+        <h1>Результат</h1>
+        <div id="map"></div>
+        <div class="info">
+            <p id="taskName">Завдання: </p>
+            <p id="distance">Ваша відстань: </p>
+            <p id="reward">Отримано токенів: </p>
+            <div class="progress">
+                <div id="accuracyBar" class="progress-bar"></div>
+            </div>
+            <p id="placement">Ви точніше за: </p>
+        </div>
+        <button class="btn-primary" onclick="nextGame()">Наступне завдання</button>
+        <button class="btn-primary" onclick="shareTwitter()">Поділитися в Twitter</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const data = JSON.parse(localStorage.getItem("result") || "{}");
+
+        document.getElementById("taskName").textContent += data.task;
+        document.getElementById("distance").textContent += `${data.distance} км`;
+        document.getElementById("reward").textContent += `${data.reward} SOL`;
+
+        const percentage = Math.floor(Math.random() * 51) + 40;
+        document.getElementById("placement").textContent += `${percentage}% гравців`;
+
+        const bar = document.getElementById("accuracyBar");
+        const max = 200;
+        const percent = Math.max(0, Math.min(100, Math.round((1 - data.distance / max) * 100)));
+        bar.style.width = percent + "%";
+
+        function nextGame() {
+            localStorage.removeItem("result");
+            window.location.href = "game.html";
+        }
+
+        function shareTwitter() {
+            const text = `Я тільки що пройшов завдання "${data.task}" у грі Solomap! Відстань: ${data.distance} км, отримано: ${data.reward} SOL! 🎯 solomap.io`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        const coordinatesMap = {
+            "Ейфелева вежа": [48.8584, 2.2945],
+            "Статуя Свободи": [40.6892, -74.0445],
+            "Сіднейський оперний театр": [-33.8568, 151.2153],
+            "Мачу-Пікчу": [-13.1631, -72.5450],
+            "Тадж-Махал": [27.1751, 78.0421]
+        };
+
+        const map = L.map('map').setView([20, 0], 2);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap & Carto'
+        }).addTo(map);
+
+        if (data.userCoords) {
+            const { lat, lng } = data.userCoords;
+            L.marker([lat, lng], { title: "Твоя відповідь" })
+                .addTo(map)
+                .bindPopup("Твоя відповідь").openPopup();
+        }
+
+        if (coordinatesMap[data.task]) {
+            const [lat, lng] = coordinatesMap[data.task];
+            L.marker([lat, lng], {
+                title: "Правильна відповідь",
+                opacity: 0.9,
+                icon: L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30]
+                })
+            }).addTo(map).bindPopup("Правильна відповідь");
+        }
+    </script>
+
+    <script src="../JS/index.js"></script>
+</body>
+
+</html>

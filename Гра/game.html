@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Solomap — Гра</title>
+    <link rel="stylesheet" href="../CSS/index.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .task-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            padding: 24px;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 90%;
+            z-index: 1000;
+            color: #fff;
+            box-shadow: 0 0 20px #00d1ff88;
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+
+        .task-panel.slide-out {
+            top: auto;
+            bottom: 20px;
+            left: 20px;
+            transform: none;
+            width: calc(100% - 40px);
+            max-width: 360px;
+            text-align: left;
+        }
+
+        .task-panel h2 {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+        }
+
+        .task-panel p {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .task-panel .btn-primary,
+        .task-panel .btn-secondary {
+            display: block;
+            width: 100%;
+            margin: 12px 0 0;
+            font-size: 1.05rem;
+        }
+
+        .toast {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1b1b1b;
+            color: #00d1ff;
+            padding: 16px 28px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px #00d1ff88;
+            z-index: 9999;
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast::before {
+            content: "💡";
+            font-size: 1.2rem;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .task-panel h2 {
+                font-size: 1.3rem;
+            }
+
+            .task-panel p {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .task-panel {
+                padding: 16px;
+                border-radius: 16px;
+            }
+
+            .task-panel.slide-out {
+                bottom: 10px;
+                left: 10px;
+                width: calc(100% - 20px);
+            }
+
+            .toast {
+                font-size: 0.85rem;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <div class="task-panel" id="taskPanel">
+        <h2>Завантаження...</h2>
+        <p>Опис завдання з'явиться тут.</p>
+        <button class="btn-primary" id="hintBtn">Підказка</button>
+        <button class="btn-secondary" id="submitGuessBtn">Надіслати відповідь</button>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../JS/game.js"></script>
+</body>
+
+</html>

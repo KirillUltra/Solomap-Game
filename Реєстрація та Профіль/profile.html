@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solomap — Профіль</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+    <link rel="stylesheet" href="../CSS/profile.css">
+    <script defer src="profile-stats.js"></script>
+</head>
+
+<body>
+    <header>
+        <a href="../index.html">Solomap</a>
+    </header>
+
+    <main class="layout">
+        <div class="container fade-in">
+            <h1>Мій профіль</h1>
+            <img id="avatarImg" class="avatar" src="" alt="Avatar">
+            <label class="upload-btn">📸 Змінити фото <input type="file" id="avatar" accept="image/*"></label>
+            <br>
+            <input type="text" id="name" placeholder="Ім’я">
+            <input type="text" id="surname" placeholder="Прізвище">
+            <input type="text" id="nickname" placeholder="Нікнейм (англійською, мін. 5 символів)">
+            <input type="text" id="wallet" disabled>
+            <div class="stat-item">🎮 Ігор зіграно: <span id="gamesPlayed">0</span></div>
+            <button class="btn-secondary" onclick="saveProfile()">Зберегти зміни</button>
+        </div>
+
+        <div class="rating-box fade-in">
+            <h2>Рейтинг</h2>
+            <div class="rating-view">
+                <button id="localBtn" class="active" onclick="toggleRating('local')">🌍 Україна</button>
+                <button id="globalBtn" onclick="toggleRating('global')">🌐 Світ</button>
+            </div>
+            <div id="ratingContent">
+                <p>Ваше місце: <strong>#12</strong></p>
+                <p>Рейтинг: <strong>1580</strong></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="../JS/index.js"></script>
+    <script src="../JS/profile-stats.js"></script>
+</body>
+
+</html>

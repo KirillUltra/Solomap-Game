@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solomap — Вхід через Google</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Увійдіть через Google</h2>
+
+    <!-- 🔽🔽🔽 ОТУТ ВСТАВ СВІЙ CLIENT ID замість YOUR_GOOGLE_CLIENT_ID -->
+    <div id="g_id_onload" data-client_id="949061697877-m6d96g6f5fbqr3q31l10iq54f4t72hgk.apps.googleusercontent.com"
+        data-context="signin" data-ux_mode="popup" data-callback="handleGoogleLogin" data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="signin_with"
+        data-size="large">
+    </div>
+
+    <script>
+        function handleGoogleLogin(response) {
+            const jwt = response.credential;
+            const payload = JSON.parse(atob(jwt.split('.')[1]));
+
+            const profile = {
+                name: payload.given_name || '',
+                surname: payload.family_name || '',
+                email: payload.email || '',
+                nickname: payload.name || 'Google User',
+                avatar: payload.picture || 'https://cdn-icons-png.flaticon.com/512/1077/1077063.png',
+                verified: true,
+                wallet: null
+            };
+
+            localStorage.setItem("profile", JSON.stringify(profile));
+            window.location.href = "profile.html";
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solomap — Реєстрація</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+    <style>
+        .register-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 40px 20px;
+            background: radial-gradient(circle at center, #0a0a0a, #000);
+        }
+
+        .register-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 480px;
+            width: 100%;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 20px #00D1FF44;
+        }
+
+        .register-box h1 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #00D1FF, #9B5DE5);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        input {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: none;
+            background: #111;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 8px #00D1FFAA;
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+
+        .or-divider {
+            text-align: center;
+            margin: 20px 0 10px;
+            opacity: 0.6;
+        }
+
+        .alt-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="register-box fade-in">
+            <h1>Solomap</h1>
+            <form>
+                <input type="text" placeholder="Ім’я" required />
+                <input type="text" placeholder="Прізвище" required />
+                <input type="email" placeholder="Електронна пошта" required />
+                <input type="password" placeholder="Пароль" required />
+                <input type="text" placeholder="Нікнейм" required />
+                <a href="profile.html" class="btn-primary" style="text-decoration: none;">
+                    Зареєструватися
+                </a>
+
+            </form>
+
+            <div class="or-divider">або</div>
+
+            <div class="alt-buttons">
+                <a href="phantom_register.html" class="btn-secondary" style="text-decoration: none;">Увійти через Phantom</a>
+                <a href="google_register.html" class="btn-secondary" style="text-decoration: none;">Увійти через Google</a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- <script>
+        function connectPhantom() {
+            alert("Підключення Phantom тимчасово заглушено у цьому прототипі.");
+        }
+
+        function loginWithGoogle() {
+            alert("Google login у цьому демо ще не підключено.");
+        }
+    </script> -->
+
+    <script src="../JS/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,199 @@
+body {
+    background: radial-gradient(circle at center, #0a0a0a, #000000);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    padding: 20px;
+}
+
+header a {
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #00D1FF, #9B5DE5);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.container,
+.rating-box {
+    flex: 1 1 350px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px #00D1FF33;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 10px #00d1ff88;
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="file"] {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: #fff;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 320px;
+    backdrop-filter: blur(8px);
+    font-size: 1rem;
+}
+
+.upload-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 2px solid #00D1FF;
+    background: transparent;
+    color: #00D1FF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.upload-btn:hover {
+    background: #00D1FF;
+    color: #121212;
+    box-shadow: 0 0 10px #00D1FF88;
+}
+
+.upload-btn input {
+    display: none;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid #00D1FF;
+    color: #00D1FF;
+    padding: 10px 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
+}
+
+.btn-secondary:hover {
+    background: #00D1FF;
+    color: #121212;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #00D1FF88;
+}
+
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #00D1FF, #9B5DE5);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.stat-item {
+    margin-top: 10px;
+    font-size: 1rem;
+    opacity: 0.85;
+}
+
+.rating-box h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.rating-view {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.rating-view button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #00D1FF;
+    background: transparent;
+    color: #00D1FF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.rating-view button.active,
+.rating-view button:hover {
+    background: #00D1FF;
+    color: #000;
+}
+
+/* ==== TOAST-ПОВІДОМЛЕННЯ ==== */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    z-index: 9999;
+    opacity: 0;
+    backdrop-filter: blur(8px);
+    animation: toast-in 0.5s forwards, toast-out 0.5s forwards 3.5s;
+    box-shadow: 0 0 10px rgba(0, 209, 255, 0.3);
+    text-align: center;
+    max-width: 80%;
+    color: #fff;
+}
+
+.toast.success {
+    background: rgba(0, 209, 255, 0.1);
+    border: 1px solid #00D1FF;
+}
+
+.toast.error {
+    background: rgba(255, 0, 80, 0.1);
+    border: 1px solid #FF0050;
+    color: #ffbfcf;
+}
+
+.toast.warning {
+    background: rgba(255, 160, 0, 0.1);
+    border: 1px solid #FFA000;
+    color: #ffd47b;
+}
+
+@keyframes toast-in {
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-out {
+    to {
+        transform: translateX(-50%) translateY(100px);
+        opacity: 0;
+    }
+}

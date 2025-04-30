@@ -1,0 +1,44 @@
+// game.js (оновлено для збереження результату на бекенд)
+
+// [...існуючий код залишаємо...] з масивом tasks, картою, підказками тощо
+
+submitBtn.addEventListener("click", () => {
+if (!selectedCoords) {
+showToast("Спочатку оберіть точку на мапі!");
+return;
+}
+
+const distance = getDistanceFromLatLonInKm(
+task.answer.lat,
+task.answer.lng,
+selectedCoords.lat,
+selectedCoords.lng
+);
+
+const reward = calculateReward(distance);
+const wallet = window.localStorage.getItem("wallet") || "guest_wallet";
+
+const resultData = {
+task: task.name,
+coords: selectedCoords,
+wallet,
+distance: +distance.toFixed(1),
+reward
+};
+
+// Зберігаємо в localStorage для result.html
+localStorage.setItem("result", JSON.stringify(resultData));
+
+// Надсилаємо на API
+fetch("http://localhost:4000/api/guess", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify(resultData)
+})
+.then(res => res.json())
+.then(() => window.location.href = "result.html")
+.catch(() => {
+alert("Помилка збереження результату. Перевір API-сервер.");
+window.location.href = "result.html";
+});
+});
