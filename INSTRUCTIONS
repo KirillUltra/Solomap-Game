@@ -1,0 +1,33 @@
+==============================
+SOL0MAP - INSTRUCTIONS FOR RUNNING MVP
+==============================
+
+🔧 What you need:
+- Node.js installed (for local server only)
+- Phantom extension (for Web3 wallet)
+
+📁 Structure:
+- index.html - main page
+- auth.html - registration
+- profile.html - profile
+- game.html - game with a card
+- rating.html - rating
+- JS/ - logic of the game, profile, account
+- CSS/ - styles of the entire site
+
+🚀 How to run:
+1. Open the terminal in the project folder
+2. Start the local server:
+   npx serve .
+
+or via Live Server in VS Code
+
+3. Open http://localhost:3000 (or server address)
+
+✅ Local data is stored in localStorage (games, profile, rating)
+
+📌 Note:
+- If Phantom is not installed, there will be an error
+- API requests are muffled for now (server is optional)
+
+Author: @KirillUltra
