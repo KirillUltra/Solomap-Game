@@ -96,24 +96,59 @@
             <div class="or-divider">або</div>
 
             <div class="alt-buttons">
-                <a href="phantom_register.html" class="btn-secondary" style="text-decoration: none;">Увійти через Phantom</a>
-                <a href="google_register.html" class="btn-secondary" style="text-decoration: none;">Увійти через Google</a>
+                <a href="phantom_register.html" class="btn-secondary" style="text-decoration: none;">Увійти через
+                    Phantom</a>
+                <a href="google_register.html" class="btn-secondary" style="text-decoration: none;">Увійти через
+                    Google</a>
 
             </div>
         </div>
     </div>
 
-    <!-- <script>
-        function connectPhantom() {
-            alert("Підключення Phantom тимчасово заглушено у цьому прототипі.");
-        }
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
 
-        function loginWithGoogle() {
-            alert("Google login у цьому демо ще не підключено.");
-        }
-    </script> -->
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const name = form.querySelector('input[placeholder="Ім’я"]').value.trim();
+                const surname = form.querySelector('input[placeholder="Прізвище"]').value.trim();
+                const email = form.querySelector('input[placeholder="Електронна пошта"]').value.trim();
+                const password = form.querySelector('input[placeholder="Пароль"]').value.trim();
+                const nickname = form.querySelector('input[placeholder="Нікнейм"]').value.trim();
+
+                if (!name || !surname || !email || !password || !nickname) {
+                    alert('Будь ласка, заповніть всі поля!');
+                    return;
+                }
+
+                const user = {
+                    name,
+                    surname,
+                    email,
+                    password, // ⚠ В продакшн — НІКОЛИ не зберігати паролі в localStorage!
+                    nickname
+                };
+
+                localStorage.setItem('solomapUser', JSON.stringify(user));
+                localStorage.setItem('solomapLoggedIn', 'true');
+
+                window.location.href = 'profile.html';
+            });
+
+            // Заменяем ссылку-кнопку на обычную кнопку
+            const registerBtn = document.querySelector('a.btn-primary');
+            const newButton = document.createElement('button');
+            newButton.textContent = 'Зареєструватися';
+            newButton.className = 'btn-primary';
+            form.replaceChild(newButton, registerBtn);
+        });
+    </script>
+
 
     <script src="../JS/index.js"></script>
+    <!-- <script src="../JS/auth.js"></script> -->
 </body>
 
 </html>

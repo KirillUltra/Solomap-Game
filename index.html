@@ -90,7 +90,8 @@
     <section class="wallet-connect">
         <h2>Підключи гаманець</h2>
         <p>Для гри потрібен гаманець Phantom. Підключайся одним кліком!</p>
-        <a href="Реєстрація та Профіль/phantom_register.html" class="btn-primary" style="text-decoration: none;">Підключити гаманець</a>
+        <a href="Реєстрація та Профіль/phantom_register.html" class="btn-primary"
+            style="text-decoration: none;">Підключити гаманець</a>
     </section>
 
     <!-- FAQ -->
@@ -128,6 +129,35 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroButtons = document.querySelector('.hero-buttons');
+
+            const isLoggedIn = localStorage.getItem('solomapLoggedIn') === 'true';
+            const userData = JSON.parse(localStorage.getItem('solomapUser'));
+
+            if (isLoggedIn && userData) {
+                // Убираем кнопку Реєстрація
+                const registerButton = [...heroButtons.querySelectorAll('button')].find(btn => btn.textContent === 'Реєстрація');
+                if (registerButton) {
+                    registerButton.parentElement.remove();
+                }
+
+                // Добавляем иконку профиля
+                const profileLink = document.createElement('a');
+                profileLink.href = 'Реєстрація та Профіль/profile.html';
+                profileLink.innerHTML = `
+                    <button class="btn-secondary">
+                        <img src="icons/profile-icon.svg" alt="Профіль" style="width: 24px; vertical-align: middle; margin-right: 8px;">
+                        ${userData.nickname}
+                    </button>
+                `;
+                heroButtons.appendChild(profileLink);
+            }
+        });
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
     <script src="JS/index.js"></script>
