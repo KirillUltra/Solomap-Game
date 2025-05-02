@@ -1,4 +1,9 @@
 // profile-stats.js — Стабільний лічильник ігор + стильне оновлення UI
+window.addEventListener('load', () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen().catch(err => console.warn('Exit fullscreen error:', err));
+    }
+});
 
 (function () {
     const key = 'gamesPlayed';

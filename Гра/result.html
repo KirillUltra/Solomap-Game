@@ -140,6 +140,13 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+
+        window.addEventListener('load', () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(err => console.warn('Exit fullscreen error:', err));
+            }
+        });
+
         const data = JSON.parse(localStorage.getItem("result") || "{}");
 
         document.getElementById("taskName").textContent += data.task;

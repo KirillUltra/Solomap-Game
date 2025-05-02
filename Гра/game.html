@@ -10,23 +10,42 @@
     <style>
         html,
         body {
+            height: 100%;
+            width: 100%;
             margin: 0;
             padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            font-family: 'Poppins', sans-serif;
-            background: #0a0a0a;
+            background-color: #c9bfbf;
+            /* сделаем чуть темнее */
         }
 
+
         #map {
-            position: absolute;
-            top: 0;
-            left: 0;
             height: 100%;
             width: 100%;
-            z-index: 1;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 209, 255, 0.4);
+            overflow: hidden;
         }
+
+        @media (max-width: 600px) {
+            #map {
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+
+        .leaflet-control {
+            background: rgba(26, 26, 26, 0.8) !important;
+            border: none !important;
+            box-shadow: 0 0 10px rgba(0, 209, 255, 0.3) !important;
+            border-radius: 10px !important;
+        }
+
+        .leaflet-bar a {
+            color: #00d1ff !important;
+        }
+
+
 
         .task-panel {
             position: absolute;
@@ -34,44 +53,84 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: #1a1a1a;
-            padding: 24px;
+            padding: 20px;
             border-radius: 20px;
-            max-width: 480px;
+            max-width: 380px;
             width: 90%;
             z-index: 1000;
             color: #fff;
-            box-shadow: 0 0 20px #00d1ff88;
+            box-shadow: 0 0 30px #00d1ff55;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             transition: all 0.5s ease;
         }
 
-        .task-panel.slide-out {
-            top: auto;
-            bottom: 20px;
-            left: 20px;
+        .task-panel.minimized {
+            top: 30px;
+            right: 30px;
+            left: auto;
             transform: none;
-            width: calc(100% - 40px);
-            max-width: 360px;
-            text-align: left;
+            max-width: 280px;
+            width: auto;
+        }
+
+        @media (max-width: 600px) {
+            .task-panel.minimized {
+                top: auto;
+                bottom: 20px;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                width: 90%;
+            }
         }
 
         .task-panel h2 {
-            font-size: 1.6rem;
-            margin-bottom: 12px;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
         }
 
         .task-panel p {
-            font-size: 1rem;
-            line-height: 1.6;
+            font-size: 0.95rem;
+            line-height: 1.4;
             opacity: 0.9;
         }
 
-        .task-panel .btn-primary,
-        .task-panel .btn-secondary {
+        .task-image {
+            width: 100%;
+            max-height: 160px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
             display: block;
             width: 100%;
-            margin: 12px 0 0;
-            font-size: 1.05rem;
+            margin: 10px 0 0;
+            font-size: 1rem;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #00d1ff, #0066ff);
+            color: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 209, 255, 0.4);
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 30px rgba(0, 209, 255, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, #444, #222);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
         }
 
         .toast {
@@ -83,7 +142,7 @@
             color: #00d1ff;
             padding: 16px 28px;
             border-radius: 15px;
-            box-shadow: 0 0 10px #00d1ff88;
+            box-shadow: 0 0 20px #00d1ff88;
             z-index: 9999;
             font-size: 1rem;
             opacity: 0;
@@ -93,54 +152,29 @@
             gap: 10px;
         }
 
-        .toast::before {
-            content: "💡";
-            font-size: 1.2rem;
-        }
-
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-
-        @media (max-width: 768px) {
-            .task-panel h2 {
-                font-size: 1.3rem;
-            }
-
-            .task-panel p {
-                font-size: 0.95rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .task-panel {
-                padding: 16px;
-                border-radius: 16px;
-            }
-
-            .task-panel.slide-out {
-                bottom: 10px;
-                left: 10px;
-                width: calc(100% - 20px);
-            }
-
-            .toast {
-                font-size: 0.85rem;
-                padding: 10px 20px;
-            }
-        }
     </style>
+
 </head>
 
 <body>
     <div id="map"></div>
 
-    <div class="task-panel" id="taskPanel">
+    <div class="task-panel" id="taskPanel"
+        data-images='["eiffel.jpg","liberty.jpg","sydney.jpg","machu.jpg","taj.jpg"]'>
+        <img src="placeholder.jpg" alt="task image" class="task-image">
         <h2>Завантаження...</h2>
         <p>Опис завдання з'явиться тут.</p>
         <button class="btn-primary" id="hintBtn">Підказка</button>
-        <button class="btn-secondary" id="submitGuessBtn">Надіслати відповідь</button>
+        <button class="btn-primary" id="submitGuessBtn">
+            <span class="btn-text">Надіслати відповідь</span>
+            <span class="spinner" style="display: none;">⏳</span>
+        </button>
+        <button class="btn-secondary" id="toggleThemeBtn" style="margin-top:10px;">Перемкнути тему</button>
+        <button class="btn-secondary" id="fullscreenBtn" style="margin-top:10px;">На весь екран</button>
     </div>
 
     <div id="toast" class="toast"></div>
