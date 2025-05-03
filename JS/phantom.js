@@ -1,3 +1,10 @@
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.solana && window.solana.isPhantom) {
+        // Если уже внутри Phantom App → автоподключение
+        registerPhantom();
+    }
+});
+
 document.getElementById("phantomConnectBtn").addEventListener("click", registerPhantom);
 
 function showToast(message) {
@@ -23,8 +30,7 @@ async function registerPhantom() {
     const encodedMessage = new TextEncoder().encode(message);
 
     try {
-        if (!isMobile() && window.solana && window.solana.isPhantom) {
-            // Desktop flow
+        if (window.solana && window.solana.isPhantom) {
             const wallet = await window.solana.connect({ onlyIfTrusted: false });
             const signature = await window.solana.signMessage(encodedMessage, "utf8");
             const walletAddress = wallet.publicKey.toString();
@@ -33,13 +39,15 @@ async function registerPhantom() {
             showToast("✅ Успішне підключення! Перенаправляємо...");
             setTimeout(() => window.location.href = "profile.html", 1500);
         } else if (isMobile()) {
-            // Mobile flow (deep link)
+            // Открываем Phantom App, чтобы там запустился сайт
             const siteUrl = encodeURIComponent(window.location.href);
             const phantomLink = `https://phantom.app/ul/browse/${siteUrl}`;
             showToast("📱 Відкриваємо Phantom App...");
             window.location.href = phantomLink;
         } else {
             showToast("❌ Phantom не знайдено. Встановіть розширення або Phantom App.");
+            loader.style.display = "none";
+            btn.style.display = "block";
         }
     } catch (e) {
         loader.style.display = "none";
