@@ -1,7 +1,6 @@
 // phantom.js
 
 document.addEventListener("DOMContentLoaded", () => {
-    // если мы внутри Phantom Mobile App (in-app browser) — сразу автоконнект
     if (inPhantomApp() && window.solana) {
         registerPhantom();
     }
@@ -20,17 +19,15 @@ function isMobile() {
     return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
-// надёжно определяем in-app browser Phantom
 function inPhantomApp() {
     return /(PhantomMobile|Phantom)/i.test(navigator.userAgent);
 }
 
-// формируем browse‑deeplink:
-// https://phantom.app/ul/browse/<url>?ref=<ref>
+// Сборка deeplink-а теперь на корень сайта
 function getBrowseLink() {
-    const url = encodeURIComponent(window.location.origin + '/phantom.html');
-    const ref = encodeURIComponent(window.location.origin + '/phantom.html');
-    return `https://phantom.app/ul/browse/${url}?ref=${ref}`;
+    const origin = encodeURIComponent(window.location.origin);
+    // После открытия Phantom загрузит именно ваш основной индекс/SPA
+    return `https://phantom.app/ul/browse/${origin}`;
 }
 
 async function registerPhantom() {
@@ -47,21 +44,17 @@ async function registerPhantom() {
             // ─── DESKTOP FLOW ─────────────────────────────────
             const wallet = await window.solana.connect({ onlyIfTrusted: false });
             const signature = await window.solana.signMessage(encodedMessage, "utf8");
-            const address = wallet.publicKey.toString();
-
-            saveProfile(address, signature.signature);
+            saveProfile(wallet.publicKey.toString(), signature.signature);
             showToast("✅ Успішне підключення! Перенаправляємо…");
             setTimeout(() => window.location.href = "profile.html", 1500);
 
         } else if (isMobile()) {
             // ─── MOBILE FLOW ──────────────────────────────────
-            // Открываем встроенный браузер Phantom
             const link = getBrowseLink();
             showToast("📱 Відкриваємо Phantom App…");
             window.location.href = link;
 
         } else {
-            // Phantom не найден ни там, ни там
             throw new Error("Phantom не знайдено. Встановіть розширення або Phantom App.");
         }
     } catch (e) {
@@ -71,18 +64,14 @@ async function registerPhantom() {
     }
 }
 
-function saveProfile(walletAddress, signatureBytes) {
-    const nickname = "User_" + walletAddress.slice(0, 4);
+function saveProfile(address, signatureBytes) {
+    const nickname = "User_" + address.slice(0, 4);
     const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/1077/1077063.png";
     const profile = {
-        wallet: walletAddress,
-        nickname,
-        name: "",
-        surname: "",
-        avatar: defaultAvatar,
+        wallet: address, nickname, name: "", surname: "", avatar: defaultAvatar,
         verified: true,
         signature: btoa(String.fromCharCode(...signatureBytes))
     };
-    localStorage.setItem("wallet", walletAddress);
+    localStorage.setItem("wallet", address);
     localStorage.setItem("profile", JSON.stringify(profile));
 }
