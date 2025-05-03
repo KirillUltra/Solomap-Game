@@ -76,6 +76,40 @@
             transform: scale(1.05);
             box-shadow: 0 0 10px #00D1FF88;
         }
+
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px #00d1ff88;
+            display: none;
+            z-index: 9999;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            .modal {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+            }
+
+            .btn-secondary {
+                font-size: 0.9rem;
+                padding: 8px 20px;
+            }
+        }
     </style>
 </head>
 
@@ -83,57 +117,13 @@
     <div class="modal">
         <h2>Реєстрація через Phantom</h2>
         <p>Будь ласка, підтвердіть володіння гаманцем</p>
-        <button class="btn-secondary" id="phantomConnectBtn">🔮 Підключити Phantom</button>
+        <button class="btn-secondary" id="phantomConnectBtn">Підключити Phantom</button>
         <div class="loader" id="loader" style="display: none;"></div>
     </div>
 
-    <script>
-        document.getElementById("phantomConnectBtn").addEventListener("click", registerPhantom);
+    <div id="toast"></div>
 
-        async function registerPhantom() {
-            const btn = document.getElementById("phantomConnectBtn");
-            const loader = document.getElementById("loader");
-            btn.style.display = "none";
-            loader.style.display = "block";
-
-            const message = "Підтверджую, що я власник гаманця для гри в Solomap.";
-            const encodedMessage = new TextEncoder().encode(message);
-
-            try {
-                if (!window.solana || !window.solana.isPhantom) {
-                    throw new Error("Phantom не встановлено");
-                }
-
-                const wallet = await window.solana.connect({ onlyIfTrusted: false });
-                const signature = await window.solana.signMessage(encodedMessage, "utf8");
-
-                const walletAddress = wallet.publicKey.toString();
-                const nickname = "User_" + walletAddress.slice(0, 4);
-                const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/1077/1077063.png";
-
-                const profile = {
-                    wallet: walletAddress,
-                    nickname,
-                    name: "",
-                    surname: "",
-                    avatar: defaultAvatar,
-                    verified: true,
-                    signature: btoa(String.fromCharCode(...signature.signature))
-                };
-
-                localStorage.setItem("wallet", walletAddress);
-                localStorage.setItem("profile", JSON.stringify(profile));
-
-                window.location.href = "profile.html";
-            } catch (e) {
-                loader.style.display = "none";
-                btn.style.display = "block";
-                alert("❌ Не вдалося завершити реєстрацію: " + e.message);
-            }
-        }
-    </script>
-
-    <script src="../JS/index.js"></script>
+    <script src="../JS/phantom.js"></script>
 </body>
 
 </html>
