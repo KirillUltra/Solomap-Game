@@ -3,10 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Solomap — Реєстрація через Phantom</title>
-    <link rel="stylesheet" href="../CSS/index.css">
+    <!-- Абсолютный путь к CSS -->
+    <link rel="stylesheet" href="/CSS/index.css">
     <style>
+        /* Ваши стили из примера */
         body {
             background: #0a0a0a;
             color: #fff;
@@ -117,13 +119,13 @@
     <div class="modal">
         <h2>Реєстрація через Phantom</h2>
         <p>Будь ласка, підтвердіть володіння гаманцем</p>
-        <button class="btn-secondary" id="phantomConnectBtn">Підключити Phantom</button>
-        <div class="loader" id="loader" style="display: none;"></div>
+        <button id="phantomConnectBtn" class="btn-secondary">Підключити Phantom</button>
+        <div id="loader" class="loader" style="display:none;"></div>
     </div>
-
     <div id="toast"></div>
 
-    <script src="../JS/phantom.js"></script>
+    <!-- Абсолютный путь к скрипту -->
+    <script src="phantom.js"></script>
 </body>
 
 </html>

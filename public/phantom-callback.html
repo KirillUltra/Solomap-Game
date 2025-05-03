@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phantom Callback</title>
+</head>
+
+<body>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const publicKey = params.get('public_key');
+        if (!publicKey) {
+            document.body.innerHTML = '<p style="color:red;">Error: public_key not found.</p>';
+        } else {
+            const profile = {
+                wallet: publicKey,
+                nickname: 'User_' + publicKey.slice(0, 4),
+                name: '',
+                surname: '',
+                avatar: 'https://cdn-icons-png.flaticon.com/512/1077/1077063.png',
+                verified: true
+            };
+            localStorage.setItem('wallet', publicKey);
+            localStorage.setItem('profile', JSON.stringify(profile));
+            // Абсолютный путь к profile.html
+            window.location.href = '/Реєстрація%20та%20Профіль/profile.html';
+        }
+    </script>
+</body>
+
+</html>
