@@ -1,6 +1,8 @@
+// phantom.js
+
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.solana && window.solana.isPhantom) {
-        // Если уже внутри Phantom App → автоподключение
+    // если мы внутри Phantom Mobile App (in-app browser) — сразу автоконнект
+    if (inPhantomApp() && window.solana) {
         registerPhantom();
     }
 });
@@ -11,13 +13,24 @@ function showToast(message) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.style.display = 'block';
-    setTimeout(() => {
-        toast.style.display = 'none';
-    }, 3000);
+    setTimeout(() => (toast.style.display = 'none'), 3000);
 }
 
 function isMobile() {
-    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+// надёжно определяем in-app browser Phantom
+function inPhantomApp() {
+    return /(PhantomMobile|Phantom)/i.test(navigator.userAgent);
+}
+
+// формируем browse‑deeplink:
+// https://phantom.app/ul/browse/<url>?ref=<ref>
+function getBrowseLink() {
+    const url = encodeURIComponent(window.location.origin + '/phantom.html');
+    const ref = encodeURIComponent(window.location.origin + '/phantom.html');
+    return `https://phantom.app/ul/browse/${url}?ref=${ref}`;
 }
 
 async function registerPhantom() {
@@ -30,24 +43,26 @@ async function registerPhantom() {
     const encodedMessage = new TextEncoder().encode(message);
 
     try {
-        if (window.solana && window.solana.isPhantom) {
+        if (!isMobile() && window.solana && window.solana.isPhantom) {
+            // ─── DESKTOP FLOW ─────────────────────────────────
             const wallet = await window.solana.connect({ onlyIfTrusted: false });
             const signature = await window.solana.signMessage(encodedMessage, "utf8");
-            const walletAddress = wallet.publicKey.toString();
+            const address = wallet.publicKey.toString();
 
-            saveProfile(walletAddress, signature.signature);
-            showToast("✅ Успішне підключення! Перенаправляємо...");
+            saveProfile(address, signature.signature);
+            showToast("✅ Успішне підключення! Перенаправляємо…");
             setTimeout(() => window.location.href = "profile.html", 1500);
+
         } else if (isMobile()) {
-            // Открываем Phantom App, чтобы там запустился сайт
-            const siteUrl = encodeURIComponent(window.location.href);
-            const phantomLink = `https://phantom.app/ul/browse/${siteUrl}`;
-            showToast("📱 Відкриваємо Phantom App...");
-            window.location.href = phantomLink;
+            // ─── MOBILE FLOW ──────────────────────────────────
+            // Открываем встроенный браузер Phantom
+            const link = getBrowseLink();
+            showToast("📱 Відкриваємо Phantom App…");
+            window.location.href = link;
+
         } else {
-            showToast("❌ Phantom не знайдено. Встановіть розширення або Phantom App.");
-            loader.style.display = "none";
-            btn.style.display = "block";
+            // Phantom не найден ни там, ни там
+            throw new Error("Phantom не знайдено. Встановіть розширення або Phantom App.");
         }
     } catch (e) {
         loader.style.display = "none";
