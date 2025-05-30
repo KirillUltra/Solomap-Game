@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="CSS/index.css">
 </head>
 
-<div id="tsparticles"></div>
-
-
 <body>
+    <div id="tsparticles"></div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -19,15 +17,12 @@
             <h1>Solomap</h1>
             <p>Гра-дослід на мапі з реальними винагородами у токенах Solana.</p>
             <div class="hero-buttons">
-
                 <a href="Гра/game.html">
                     <button class="btn-primary">Грати</button>
                 </a>
-
                 <a href="Реєстрація та Профіль/auth.html">
                     <button class="btn-secondary">Реєстрація</button>
                 </a>
-
                 <a href="rating.html">
                     <button class="btn-secondary">Рейтинг</button>
                 </a>
@@ -90,8 +85,7 @@
     <section class="wallet-connect">
         <h2>Підключи гаманець</h2>
         <p>Для гри потрібен гаманець Phantom. Підключайся одним кліком!</p>
-        <a href="public/phantom.html" class="btn-primary"
-            style="text-decoration: none;">Підключити гаманець</a>
+        <a href="../Реєстрація та Профіль/phantom.html" class="btn-primary" style="text-decoration: none;">Підключити гаманець</a>
     </section>
 
     <!-- FAQ -->
@@ -133,18 +127,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const heroButtons = document.querySelector('.hero-buttons');
-
             const isLoggedIn = localStorage.getItem('solomapLoggedIn') === 'true';
             const userData = JSON.parse(localStorage.getItem('solomapUser'));
 
             if (isLoggedIn && userData) {
-                // Убираем кнопку Реєстрація
                 const registerButton = [...heroButtons.querySelectorAll('button')].find(btn => btn.textContent === 'Реєстрація');
                 if (registerButton) {
                     registerButton.parentElement.remove();
                 }
 
-                // Добавляем иконку профиля
                 const profileLink = document.createElement('a');
                 profileLink.href = 'Реєстрація та Профіль/profile.html';
                 profileLink.innerHTML = `
@@ -157,7 +148,6 @@
             }
         });
     </script>
-
 
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
     <script src="JS/index.js"></script>
